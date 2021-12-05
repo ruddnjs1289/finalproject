@@ -10,12 +10,12 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean
+	 <bean
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 		id="dataSource">
 		<property name="driverClassName"
 			value="org.mariadb.jdbc.Driver" />
-		<property name="url" value="jdbc:mariadb://127.0.0.1:3307/raid"/>
+		<property name="url" value="jdbc:mariadb://127.0.0.1:3306/raid"/>
 		<property name="username" value="root" />
 		<property name="password" value="1234" />
 	</bean>
@@ -36,7 +36,7 @@
 			ref="sqlSessionFactory" />
 	</bean>
 	
-<context:component-scan base-package="com.sping.domain" />
-<context:component-scan base-package="com.spring.dao" />
-<context:component-scan base-package="com.spring.service" />
+	<context:component-scan base-package="com.spring.ex.dto"/>
+	<context:component-scan base-package="com.spring.ex.dao"/>
+	<context:component-scan base-package="com.spring.ex.Service"/>
 </beans>

@@ -26,8 +26,8 @@ li {
 }
 
 .login {
-  width: 30%;
-  height: 600px;
+  width: 60%;
+  height: 700px;
   background: white;
   border-radius: 20px;
   display: flex;
@@ -117,3 +117,4 @@ h2 {
   font-size: 1.2em;
   letter-spacing: 2px;
 }
+

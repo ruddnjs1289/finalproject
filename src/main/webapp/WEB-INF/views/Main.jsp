@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,15 +15,41 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+<form role="form" method="post" autocomplete="off" action="login">
 	<div class="main-container">
 		<div class="temp-box">
 			<img src="./resources/img/Logo.png">
 		</div>
 		<div class="temp-box">
-		<a href=Login.do>
+			<!-- <a href=Login.do>
 			<img
 				src="https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-8/24/018_319_door_enter_login_signin-128.png">
-			</a>
+			</a> -->
+			
+			<c:if test="${member == null}">
+			<p>
+				아이디:<input type="text" name="id" class="id" style="width: 50%">
+			</p>
+			<p>
+				비밀번호:<input type="text" name="pw" class="pw" style="width: 50%">
+			</p>
+			</c:if>
+			
+			<c:if test="${member !=null}">
+			<p>${member.id}님 환영합니다.</p>
+			<a href="logout.do">로그아웃</a>
+			</c:if>
+			
+			
+			<c:if test="${member == null}">
+			<!--나중에 type 패스워드로 바꾸기  -->
+			<div
+				style="width: 164px; height: 45px; border: 1px solid red; float: left;"><button type="submit">로그인</button></div>
+			<div
+				style="width: 164px; height: 45px; border: 1px solid green; float: left;">
+				회원가입</div>
+			</c:if>
+
 		</div>
 		<div class="temp-box">
 			레이드 구인 구직
@@ -38,16 +66,16 @@
 				<!-- The slideshow/carousel -->
 				<div class="carousel-inner">
 					<div class="carousel-item active">
-						<img src="./resources/img/slide01.jpg" alt="Los Angeles"
-							class="d-block w-100">
+						<img src="./resources/img/Valtan.jpg" alt="Los Angeles"
+							class="d-block w-100" style="height: 500px;">
 					</div>
 					<div class="carousel-item">
-						<img src="./resources/img/slide02.jpg" alt="Chicago"
-							class="d-block w-100">
+						<img src="./resources/img/Biackiss.jpg" alt="Chicago"
+							class="d-block w-100" style="height: 500px;">
 					</div>
 					<div class="carousel-item">
-						<img src="./resources/img/slide03.jpg" alt="New York"
-							class="d-block w-100">
+						<img src="./resources/img/Kouku.jpg" alt="New York"
+							class="d-block w-100" style="height: 500px;">
 					</div>
 				</div>
 
@@ -62,56 +90,59 @@
 				</button>
 			</div>
 		</div>
-		
+
 		<div class="temp-box">
-			     <p style="font-size:30px;">공략 게시판</p>
-			 
-	  <div style="text-align: left; font-size: 30px;">    
-		<ul>
-			<li>발탄 공략</li>
+			<p style="font-size: 30px;">공략 게시판</p>
+
+			<div style="text-align: left; font-size: 25px;">
 				<ul>
-					<li>1네임드</li>
-					<li>2네임드</li>
+					<li>발탄 공략</li>
+					<ul>
+						<li><a href="Valtan1.do">1네임드</a></li>
+						<li><a href="Valtan1.do">2네임드</a></li>
+					</ul>
 				</ul>
-		</ul>
-		
-		<ul>
-			<li>비아키스</li>
+
 				<ul>
-					<li>1네임드</li>
-					<li>2네임드</li>
-					<li>3네임드</li>
+					<li>비아키스</li>
+					<ul>
+						<li><a href="Biackiss1.do">1네임드</a></li>
+						<li><a href="Biackiss2.do">2네임드</a></li>
+						<li><a href="Biackiss3.do">3네임드</a></li>
+					</ul>
 				</ul>
-		</ul>
-		<ul>
-				<li>쿠크세이튼</li> 
+				<ul>
+					<li>쿠크세이튼</li>
 					<ul>
 						<li><a href="Kouku1.do"> 1네임드</a></li>
 						<li><a href="Kouku1.do"> 2네임드</a></li>
 						<li><a href="Kouku1.do"> 3네임드</a></li>
 					</ul>
-			</ul>
-	  </div>
-			
+				</ul>
+			</div>
+
 		</div>
 
-		<div class="temp-box">시뮬<br>
-		<a href="Stone.do">돌 시뮬</a>
-		<a href="Bingo">빙고</a>
-		<a href="Pattern">아재패턴</a>
+		<div class="temp-box">
+			시뮬<br> <a href="Stone.do">돌 시뮬</a> <a href="Bingo">빙고</a> <a
+				href="Pattern">아재패턴</a>
+
+			<h1>회원 목록</h1>
+
+
 		</div>
 		<div class="temp-box">
-			<p style="font-size: 30px;"> 길드 홍보 게시판</p>
+			<p style="font-size: 25px;">길드 홍보 게시판</p>
 			<div style="font-size: 25px;">
 				<li><a href="Carmine.do">카마인</a></li>
 				<li><a href="Loopaeon.do">루페온</a></li>
 				<li><a href="Ninave.do">니나브</a></li>
 			</div>
-			<p style="font-size: 30px;"> 자유게시판</p>
-			
+			<p style="font-size: 25px;">자유게시판</p>
+			r
 		</div>
 		<div class="temp-box3">밑에 아무거나</div>
 	</div>
-
+</form>
 </body>
 </html>

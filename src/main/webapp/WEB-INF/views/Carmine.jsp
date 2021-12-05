@@ -19,6 +19,7 @@
 		</div>
 		
 		<div class="temp-box">
+		<table>
 			<thead>
 				<tr>
 					<th>번호</th>
@@ -30,16 +31,20 @@
 				<tbody>
 					<c:forEach items="${list}" var="list"> 
 					 	<tr>
-					 		<td>${list.Bno}</td>
-					 		<td>${list.title}</td>
+					 		<td>${list.bno}</td>
+					 		<td>
+					 		<a href="View?bno=${list.bno}">${list.title}</a>
+					 		</td>
 					 		<td>${list.regDate}</td>
-					 		<td>${list.Writer}</td>
-					 		<td>${list.Cnt}</td>
+					 		<td>${list.writer}</td>
+					 		<td>${list.viewCnt}</td>
 					 	</tr>
 					</c:forEach>
 				</tbody>
-			
 			</thead>
+			
+		</table>
+		<div style="text-align: right;"><a href="Write.do">글작성하기</a></div>
 		</div>
 		
 		
