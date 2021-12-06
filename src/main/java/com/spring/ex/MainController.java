@@ -41,7 +41,7 @@ public class MainController {
 	@Inject
 	CarmineService Cservice; // 카마인 서비스
 
-	@RequestMapping("/main")
+	@RequestMapping("/Main")
 	public String Main() {
 		return "Main";
 	}
@@ -95,7 +95,7 @@ public class MainController {
 		 */
 
 		service.register(vo);
-		return "Login";
+		return "Main";
 	}
 
 	// 회원확인
@@ -149,6 +149,14 @@ public class MainController {
 		Cservice.Modify(vo);
 		return "redirect:/View?bno="+vo.getBno();
 	}
+	
+	//게시글 삭제
+	@RequestMapping(value="/Delete",method =  RequestMethod.GET)
+	public String getDelete(@RequestParam("bno") int bno) throws Exception{
+		Cservice.Delete(bno);
+		return "redirect:/Carmine";
+	}
+	
 	
 	// 돌 시뮬
 	@RequestMapping("/Stone")
@@ -230,12 +238,97 @@ public class MainController {
 
 	// 카마인 서버게시판으로
 	@RequestMapping(value = "/Carmine", method = RequestMethod.GET)
-	public String Carmine(Model model) throws Exception {
-		List<Carmine> list = null;
-		list = Cservice.list();
+	public /*String*/void Carmine(Model model,@RequestParam("num") int num) throws Exception {
+		
+		/*
+		 * List<Carmine> list = null; list = Cservice.list(); model.addAttribute("list",
+		 * list);
+		 */
+		
+		/* return "Carmine"; */
+	//게시물의 총 개수 구함->한 페이지당 출력할 게시물 개수 정함 ->하단에 표시알 페이징 게시물 갯수 구함 ->현재 페이지를 기준 10개 데이터 출력
+		
+		
+		//게시물 총 갯수 구하기 
+		int count= Cservice.Count();
+		
+		//한 페이지에 출력할 게시물 갯수
+		int postNum = 10;
+		
+		//하단 페이징 번호([게시물 총 개수/한페이지에 출력할 갯수]의 올림)
+		int pageNum =(int)Math.ceil((double)count/postNum);
+		
+		//출력할 게시물 
+		int displayPost =(num-1)*postNum;
+		
+		//한번에 표시할 페이징 번호의 갯수
+		int pageNum_cnt=10;
+		
+		//표시되는 페이지 번호 중 마지막 번호
+		int endPageNum =(int)(Math.ceil((double)num/(double)pageNum_cnt)*pageNum_cnt);
+		
+		//표시 되는 페이지 번호 중 첫번째 번호
+		int startPageNum = endPageNum-(pageNum_cnt-1);
+		
+		// 마지막 번호 재계산
+		int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
+		 
+		if(endPageNum > endPageNum_tmp) {
+		 endPageNum = endPageNum_tmp;
+		}
+		
+		boolean prev = startPageNum == 1 ? false : true;
+		boolean next = endPageNum * pageNum_cnt >= count ? false : true;
+		
+		List<Carmine> list=null;
+		list = Cservice.listPage(displayPost, postNum);
+		model.addAttribute("list",list);
+		model.addAttribute("pageNum",pageNum);
+		
+		// 시작 및 끝 번호
+		model.addAttribute("startPageNum", startPageNum);
+		model.addAttribute("endPageNum", endPageNum);
 
-		model.addAttribute("list", list);
-		return "Carmine";
+		// 이전 및 다음 
+		model.addAttribute("prev", prev);
+		model.addAttribute("next", next);
+		
+		//현재 페이지
+		model.addAttribute("select",num);
+		
+		
+	
+	
+	}
+	
+	// 카마인 서버게시판으로 +페이징 추가
+	@RequestMapping(value = "/CarminePage", method = RequestMethod.GET)
+	public void getCarminepage(Model model, @RequestParam("num") int num ) throws Exception {
+		//게시물의 총 개수 구함->한 페이지당 출력할 게시물 개수 정함 ->하단에 표시알 페이징 게시물 갯수 구함 ->현재 페이지를 기준 10개 데이터 출력
+		
+		
+		//게시물 총 갯수 구하기 
+		int count= Cservice.Count();
+		
+		//한 페이지에 출력할 게시물 갯수
+		int postNum = 10;
+		
+		//하단 페이징 번호([게시물 총 개수/한페이지에 출력할 갯수]의 올림)
+		int pageNum =(int)Math.ceil((double)count/postNum);
+		
+		//출력할 게시물 
+		int displayPost =(num-1)*postNum;
+		
+		List<Carmine> list=null;
+		list = Cservice.listPage(displayPost, postNum);
+		model.addAttribute("list",list);
+		model.addAttribute("pageNum",pageNum);
+	
+		
+		
+		
+		
+		
 	}
 
 }

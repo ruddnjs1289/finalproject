@@ -17,5 +17,14 @@ public interface CarmineService {
 	
 	//게시글 수정
 	public void Modify(Carmine vo) throws Exception;
+	
+	//게시글 삭제
+	public void  Delete(int bno) throws Exception;
+	
+	//게시글 총 개수
+	public int Count() throws Exception;
+	
+	//게시물 목록 +페이징
+	public List<Carmine> listPage(int displayPost, int postNum) throws Exception;
 
 }

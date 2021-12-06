@@ -22,7 +22,7 @@
 			<div class="login" style="height: 700px;">
 				<h2>Join</h2>
 				<div class="login_sns">
-					<li><a href="main.do">home</i></a></li>
+					<li><a href="Main.do">home</i></a></li>
 				</div>
 				<div class="login_id">
 					<h4>ID</h4>

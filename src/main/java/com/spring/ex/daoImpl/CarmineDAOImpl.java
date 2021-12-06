@@ -1,5 +1,6 @@
 package com.spring.ex.daoImpl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,6 +13,8 @@ import com.spring.ex.dto.Carmine;
 @Repository
 public class CarmineDAOImpl implements CarmineDAO{
 
+	//매퍼와 동일안 아이디어야함
+	
 	@Inject
 	private SqlSession sql;
 	
@@ -20,6 +23,8 @@ public class CarmineDAOImpl implements CarmineDAO{
 	private static String a= "CarmineMapper.view";
 	
 	private static String md= "CarmineMapper.modify";
+	
+	private static String count="CarmineMapper.count";
 	
 	
 	//게시물 목록
@@ -51,6 +56,33 @@ public class CarmineDAOImpl implements CarmineDAO{
 		System.out.println(sql.update(md,vo));
 		sql.update(namespace+".modify",vo);
 		
+	}
+
+	//게시글 삭제
+	@Override
+	public void Delete(int bno) throws Exception {
+		sql.delete(namespace+".delete",bno); 
+		
+	}
+
+	//게시물 총 갯수
+	@Override
+	public int Count() throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println(count+"확인용");
+		return sql.selectOne(namespace+".count");
+	}
+
+	//게시물 목록+페이징
+	@Override
+	public List<Carmine> listPage(int displayPost, int postNum) throws Exception {
+		
+		HashMap<String,Integer> data =new HashMap<String,Integer>();
+		
+		data.put("displayPost", displayPost);
+		data.put("postNum",postNum);
+		
+		return sql.selectList(namespace+".listPage",data);
 	}
 	
 	

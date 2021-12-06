@@ -46,6 +46,25 @@ public class CarmineServiceImpl  implements CarmineService{
 		dao.Modify(vo);
 		
 	}
+
+	@Override
+	public void Delete(int bno) throws Exception {
+		dao.Delete(bno);
+		
+	}
+
+	//°Ô½Ã¹° ÃÑ °¹¼ö
+	@Override
+	public int Count() throws Exception {
+		// TODO Auto-generated method stub
+		return dao.Count();
+	}
+	//°Ô½Ã¹° +ÆäÀÌÂ¡
+	@Override
+	public List<Carmine> listPage(int displayPost, int postNum) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.listPage(displayPost, postNum);
+	}
 	
 	
 

@@ -134,7 +134,7 @@
 		<div class="temp-box">
 			<p style="font-size: 25px;">길드 홍보 게시판</p>
 			<div style="font-size: 25px;">
-				<li><a href="Carmine.do">카마인</a></li>
+				<li><a href="Carmine?num=1">카마인</a></li>
 				<li><a href="Loopaeon.do">루페온</a></li>
 				<li><a href="Ninave.do">니나브</a></li>
 			</div>

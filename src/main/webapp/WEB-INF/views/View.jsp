@@ -24,7 +24,7 @@
 
 	</form>
 	<div>
-		<a href="Modify?bno=${view.bno}">게시물 수정</a>
+		<a href="Modify?bno=${view.bno}">게시물 수정</a> , <a href="Delete?bno=${view.bno}">게시물 삭제</a>
 	</div>
 </body>
 </html>

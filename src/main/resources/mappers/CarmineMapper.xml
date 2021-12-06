@@ -35,12 +35,37 @@
 	<update id="modify" parameterType="com.spring.ex.dto.Carmine">
 		update carmine
 		set
-		title = #{title},
+		title =
+		#{title},
 		content = #{content},
 		writer = #{writer},
 		regDate=SYSDATE()
-		
+
 		where bno = #{bno}
 	</update>
+
+	<!-- 게시물 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete
+		from carmine
+		where bno =
+		#{bno}
+	</delete>
+
+	<!-- 게시물 총 갯수 -->
+	<select id="count" resultType="int">
+		select count(bno) from carmine
+	</select>
+
+
+	<!-- 게시물 목록 + 페이징 -->
+	<select id="listPage" parameterType="hashMap" resultType="com.spring.ex.dto.Carmine">
+		select
+		 bno, title, writer, regDate, viewCnt
+		from carmine
+		 
+		limit #{displayPost}, #{postNum}
+	</select>
+
 
 </mapper>
