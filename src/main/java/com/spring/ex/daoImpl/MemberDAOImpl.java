@@ -29,16 +29,24 @@ public class MemberDAOImpl implements MemberDAO {
 		
 	}
 
+	//아이디 확인
 	@Override
-	public int idCheck(Member vo) throws Exception {
-		int result =sql.selectOne(namespace+".idCheck",vo);
-		return result;
+	public Member idCheck(String id) throws Exception {
+		
+		return sql.selectOne(namespace+".idCheck",id);
 	}
 
-	
+	//로그인
 	 @Override 
 	 public Member login(Member vo) throws Exception { 
 		 return sql.selectOne(namespace+".login",vo); 
+	}
+
+	@Override
+	public void delete(Member vo) throws Exception {
+		// TODO Auto-generated method stub
+		sql.delete(namespace+".delete",vo);
+		
 	}
 	 
 

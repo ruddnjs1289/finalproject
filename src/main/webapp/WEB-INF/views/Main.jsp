@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -15,41 +16,52 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<form role="form" method="post" autocomplete="off" action="login">
+
 	<div class="main-container">
 		<div class="temp-box">
-			<img src="./resources/img/Logo.png">
+			<a href="main.do"><img src="./resources/img/Logo.png"></a>
 		</div>
 		<div class="temp-box">
 			<!-- <a href=Login.do>
 			<img
 				src="https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-8/24/018_319_door_enter_login_signin-128.png">
 			</a> -->
-			
+        <form role="form" method="post" autocomplete="off" action="login">
 			<c:if test="${member == null}">
 			<p>
-				아이디:<input type="text" name="id" class="id" style="width: 50%">
+				아이디:<input type="text" name="id"  style="width: 50%">
 			</p>
 			<p>
-				비밀번호:<input type="text" name="pw" class="pw" style="width: 50%">
+				비밀번호:<input type="text" name="pw"  style="width: 50%">
 			</p>
 			</c:if>
 			
 			<c:if test="${member !=null}">
-			<p>${member.id}님 환영합니다.</p>
-			<a href="logout.do">로그아웃</a>
+				<p>${member.id}님 환영합니다.</p>
+				<a href="logout.do">로그아웃</a> <a href="delete.do">회원탈퇴</a>
 			</c:if>
 			
+			<c:if test="${msg==false}">
+				<script type="text/javascript">
+					alert('로그인 실패')
+				</script>
+			</c:if>
 			
 			<c:if test="${member == null}">
 			<!--나중에 type 패스워드로 바꾸기  -->
 			<div
-				style="width: 164px; height: 45px; border: 1px solid red; float: left;"><button type="submit">로그인</button></div>
+				style="width: 164px; height: 45px; border: 1px solid red; float: left;"><button type="submit" id="Login">로그인</button></div>
 			<div
 				style="width: 164px; height: 45px; border: 1px solid green; float: left;">
-				회원가입</div>
+				<button type="button" name="JoinID" onclick="location.href='Join.do'">회원가입</button></div>
 			</c:if>
+		</form>
 
+				
+				
+				
+				
+		
 		</div>
 		<div class="temp-box">
 			레이드 구인 구직
@@ -127,7 +139,7 @@
 			시뮬<br> <a href="Stone.do">돌 시뮬</a> <a href="Bingo">빙고</a> <a
 				href="Pattern">아재패턴</a>
 
-			<h1>회원 목록</h1>
+		
 
 
 		</div>
@@ -139,7 +151,7 @@
 				<li><a href="Ninave.do">니나브</a></li>
 			</div>
 			<p style="font-size: 25px;">자유게시판</p>
-			r
+			
 		</div>
 		<div class="temp-box3">밑에 아무거나</div>
 	</div>

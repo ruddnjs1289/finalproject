@@ -7,7 +7,7 @@
 <title>게시물 수정</title>
 </head>
 <body>
-<form method="post">
+<form method="post" >
 	<label>제목</label>
 	<input type="text" name="title" value="${view.title}"/>
 	<br />

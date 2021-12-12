@@ -32,10 +32,16 @@ public class MemberServiceImpl implements MemberService{
 	
 	//아이디 중복체크
 	@Override
-	public int idCheck(Member vo) throws Exception {
-		int result =dao.idCheck(vo);
-		return result;
+	public Member idCheck(String id) throws Exception {
 		
+		return dao.idCheck(id);
+		
+	}
+
+
+	@Override
+	public void delete(Member vo) throws Exception {
+		dao.delete(vo);
 	}
 
 	

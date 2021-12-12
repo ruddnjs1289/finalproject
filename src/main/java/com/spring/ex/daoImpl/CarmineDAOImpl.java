@@ -26,6 +26,8 @@ public class CarmineDAOImpl implements CarmineDAO{
 	
 	private static String count="CarmineMapper.count";
 	
+	private static String viewcnt="CarmineMapper.Viewcnt";
+	
 	
 	//게시물 목록
 	@Override
@@ -50,6 +52,8 @@ public class CarmineDAOImpl implements CarmineDAO{
 		return sql.selectOne(namespace+".view",bno);
 	}
 
+	
+	
 	//게시글 수정
 	@Override
 	public void Modify(Carmine vo) throws Exception {
@@ -74,16 +78,56 @@ public class CarmineDAOImpl implements CarmineDAO{
 	}
 
 	//게시물 목록+페이징
+	
+	/*
+	 * @Override public List<Carmine> listPage(int displayPost, int postNum) throws
+	 * Exception {
+	 * 
+	 * HashMap<String,Integer> data =new HashMap<String,Integer>();
+	 * 
+	 * data.put("displayPost", displayPost); data.put("postNum",postNum);
+	 * 
+	 * return sql.selectList(namespace+".listPage",data); }
+	 */
+
+	
 	@Override
-	public List<Carmine> listPage(int displayPost, int postNum) throws Exception {
+	public List<Carmine> listPage(int displayPost, int postNum, String searchType, String keyword) throws Exception {
 		
-		HashMap<String,Integer> data =new HashMap<String,Integer>();
-		
-		data.put("displayPost", displayPost);
-		data.put("postNum",postNum);
-		
+		HashMap<String,Object> data =new HashMap<String,Object>();
+		  
+		 data.put("displayPost", displayPost); 
+		 data.put("postNum",postNum);
+		 
+		 data.put("searchType",searchType);
+		 data.put("keyword",keyword);
+		 
 		return sql.selectList(namespace+".listPage",data);
 	}
+
+	//게시물 총 갯수 +검색 전용
+	@Override
+	public int searchCount(String searchType, String keyword) throws Exception {
+		
+		HashMap<String,Object> data =new HashMap<String, Object>();
+		
+		data.put("searchType", searchType);
+		data.put("keyword", keyword);
+		
+		
+		return sql.selectOne(namespace+".searchCount",data);
+	}
+
+	//조회수 
+	@Override
+	public void plusCnt(int bno) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println(sql.update(viewcnt));
+		sql.update(viewcnt);
+	}
+
+	
+
 	
 	
 

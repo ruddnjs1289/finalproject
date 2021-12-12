@@ -1,27 +1,89 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+	pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>ê²Œì‹œë¬¼ ì¡°íšŒ</title>
+<meta charset="EUC-KR">
+<title>±Û¾²±â</title>
+<link href="./resources/css/attack.css" rel="stylesheet" />
 </head>
 <body>
-<form method="post">
-	<label>ì œëª©</label>
-	<input type="text" name="title" />
-	<br />
+	<div class="main-container">
+		<div class="temp-box">
+			<form method="post">
+				<a href="main.do"><img src="./resources/img/Logo.png"></a>
 
-	<label>ìž‘ì„±ìž</label>
-	<input type="text" name="writer" />
-	<br />
+			</form>
+		</div>
+		<div class="temp-box">
+			<c:if test="${member == null}">
+			<a href="main.do">·Î±×ÀÎÇÏ·¯°¡±â</a>
+			</c:if>
+			
+			<c:if test="${member !=null}">
+			<p style="font-size:30px;">${member.id}´Ô È¯¿µÇÕ´Ï´Ù.</p>
+			<a href="logout.do">·Î±×¾Æ¿ô</a>
+			</c:if>
+		</div>
 
-	<label>ë‚´ìš©</label>
-	<textarea cols="50" rows="5" name="content"></textarea>
-	<br />
+		<div class="temp-box">
+			<form method="post">
+				<label style="font-size: 30px;">Á¦¸ñ :</label><input type="text" name="title" style="width: 70%; height: 30px; margin: auto;" /><br /> 
+				<label>ÀÛ¼ºÀÚ:</label><input type="text" name="writer" value="${member.id}"style=" height: 30px; margin: auto;" readonly="readonly"/></br>
+				
+				
+				<label>³»¿ë</label></br>
+				<textarea cols="50" wrap="soft" rows="5" name="content" style="margin: 0px; width: 707px; height: 310px;"></textarea>
+				
+				<br/>
 
-<button type="submit">ìž‘ì„±</button> 
+				<button type="submit">ÀÛ¼º</button>
 
-	</form>
+			</form>
+		</div>
+
+
+		<div class="temp-box2">
+			<p style="text-align: center;">°ø·« °Ô½ÃÆÇ</p>
+			<ul>
+				<li>¹ßÅº</li>
+				<ul>
+					<li><a href="Valtan1.do">1³×ÀÓµå</a></li>
+					<li><a href="Valtan2.do">2³×ÀÓµå</a></li>
+				</ul>
+			</ul>
+			<ul>
+				<li>ºñ¾ÆÅ°½º</li>
+				<ul>
+					<li><a href="Biackiss1.do">1³×ÀÓµå</a></li>
+					<li><a href="Biackiss2.do">2³×ÀÓµå</a></li>
+					<li><a href="Biackiss3.do">3³×ÀÓµå</a></li>
+				</ul>
+			</ul>
+
+			<ul>
+				<li>ÄíÅ©¼¼ÀÌÆ°</li>
+				<ul>
+					<li><a href="Kouku1.do"> 1³×ÀÓµå</a></li>
+					<li><a href="Kouku2.do"> 2³×ÀÓµå</a></li>
+					<li><a href="Kouku3.do"> 3³×ÀÓµå</a></li>
+				</ul>
+			</ul>
+			<p style="text-align: center;">ÀÚÀ¯°Ô½ÃÆÇ</p>
+			<p style="text-align: center;">±æµå È«º¸ °Ô½ÃÆÇ</p>
+			<li><a href="Carmine?num=1">Ä«¸¶ÀÎ</a></li>
+			<li><a href="Loopaeon.do">·çÆä¿Â</a></li>
+			<li><a href="Ninave.do">´Ï³ªºê</a></li> ½Ã¹Ä<br>
+			<li><a href="Stone.do">µ¹½Ã¹Ä</a></li>
+			<li><a href="Bingo">ºù°í</a></li>
+			<li><a href="Pattern">¾ÆÀçÆÐÅÏ</a>
+		</div>
+		<div class="temp-box3">¹Ø¿¡ ¾Æ¹«°Å³ª</div>
+	</div>
 </body>
 </html>
+
+
+

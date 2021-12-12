@@ -14,12 +14,17 @@
 <body>
 	<div class="main-container">
 		<div class="temp-box">
-			<img src="./resources/img/Logo.png">
+			<a href="main.do"><img src="./resources/img/Logo.png"></a>
 		</div>
 		<div class="temp-box">
-			<a href=Login.do> <img
-				src="https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-8/24/018_319_door_enter_login_signin-128.png">
-			</a>
+			<c:if test="${member == null}">
+			<a href="main.do">로그인하러가기</a>
+			</c:if>
+			
+			<c:if test="${member !=null}">
+			<p style="font-size:30px;">${member.id}님 환영합니다.</p>
+			<a href="logout.do">로그아웃</a>
+			</c:if>
 		</div>
 
 		<div class="temp-box">
@@ -48,7 +53,11 @@
 
 			</table>
 			<div style="text-align: right;">
-				<a href="Write.do">글작성하기</a>
+			
+			
+				
+				<button type="button" id="ok">작성하기</button>
+			
 
 			</div>
 			<div>
@@ -57,30 +66,41 @@
 					<a href="Carmine?num=${num}">${num}</a>
 				</span>
 			</c:forEach>  --%>
-				<c:if test="${prev}">
-					<span>[ <a href="Carmine?num=${startPageNum - 1}">이전</a>
-						]
+				<c:if test="${page.prev}">
+					<span>[ <a href="Carmine?num=${page.startPageNum - 1}${page.searchTypeKeyword}">이전</a> ]
 					</span>
 				</c:if>
 
-				<c:forEach begin="${startPageNum}" end="${endPageNum}" var="num">
-					<span> 
-						<c:if test="${select !=num}">
-							<a href="Carmine?num=${num}">${num}</a>
-						</c:if>
-						
-						<c:if test="${select == num}">
+				<c:forEach begin="${page.startPageNum}" end="${page.endPageNum}" var="num">
+					<span> <c:if test="${select !=num}">
+							<a href="Carmine?num=${num}${page.searchTypeKeyword}">${num}</a>
+						</c:if> <c:if test="${select == num}">
 							<b>${num}</b>
 						</c:if>
 					</span>
 				</c:forEach>
 
-				<c:if test="${next}">
-					<span>[ <a href="Carmine?num=${endPageNum + 1}">다음</a>
-						]
+				<c:if test="${page.next}">
+					<span>[ <a href="Carmine?num=${page.endPageNum + 1}${page.searchTypeKeyword}">다음</a> ]
 					</span>
 				</c:if>
 			</div>
+			<div>
+				<select name="searchType">
+					<option value="title" <c:if test="${page.searchType eq 'title'}">selected</c:if>>제목</option>
+					<option value="content" <c:if test="${page.searchType eq 'content'}">selected</c:if>>내용</option>
+					<option value="title_content" <c:if test="${page.searchType eq 'title_content'}">selected</c:if>>제목+내용</option>
+					<option value="writer" <c:if test="${page.searchType eq 'writer'}">selected</c:if>>작성자</option>
+				</select> 
+
+				<input type="text" name="keyword" value="${page.keyword}">
+				<button type="button" id="searchBtn">검색</button>
+			</div>
+			
+			
+		
+
+
 		</div>
 
 
@@ -112,7 +132,7 @@
 			</ul>
 			<p style="text-align: center;">자유게시판</p>
 			<p style="text-align: center;">길드 홍보 게시판</p>
-			<li><a href="Carmine.do">카마인</a></li>
+			<li><a href="Carmine?num=1">카마인</a></li>
 			<li><a href="Loopaeon.do">루페온</a></li>
 			<li><a href="Ninave.do">니나브</a></li> 시뮬<br>
 			<li><a href="Stone.do">돌시뮬</a></li>
@@ -121,5 +141,26 @@
 		</div>
 		<div class="temp-box3">밑에 아무거나</div>
 	</div>
+	
+		<script type="text/javascript">
+				document.getElementById("searchBtn").onclick = function(){
+					let searchType =document.getElementsByName("searchType")[0].value;
+					let keyword = document.getElementsByName("keyword")[0].value;
+					
+					console.log(searchType)
+					console.log(keyword)
+					location.href ="Carmine?num=1"+ "&searchType=" + searchType + "&keyword=" + keyword;
+				};
+				
+				document.getElementById("ok").onclick=function(){
+					if (${member == null}) {
+						alert("로그인을 해주세요")
+						window.location.href='main.do';
+					}else {
+						window.location.href='Write.do';
+					}
+				}
+				
+		</script>
 </body>
 </html>

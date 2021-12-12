@@ -5,6 +5,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.ex.Service.CarmineService;
 import com.spring.ex.dao.CarmineDAO;
@@ -60,11 +62,38 @@ public class CarmineServiceImpl  implements CarmineService{
 		return dao.Count();
 	}
 	//°Ô½Ã¹° +ÆäÀÌÂ¡
+	/*
+	 * @Override public List<Carmine> listPage(int displayPost, int postNum) throws
+	 * Exception { // TODO Auto-generated method stub return
+	 * dao.listPage(displayPost, postNum); }
+	 * 
+	 */
+	
 	@Override
-	public List<Carmine> listPage(int displayPost, int postNum) throws Exception {
+	public List<Carmine> listPage(int displayPost, int postNum,String searchType,String keyword) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.listPage(displayPost, postNum);
+		
+		return dao.listPage(displayPost, postNum,searchType,keyword);
 	}
+
+	//°Ô½Ã¹° ÃÑ °¹¼ö
+	@Override
+	public int searchCount(String searchType, String keyword) throws Exception {
+		
+		return dao.searchCount(searchType, keyword);
+	}
+
+	@Override
+	public void plusCnt(int bno) throws Exception {
+		// TODO Auto-generated method stub
+		 dao.plusCnt(bno);
+	}
+
+	
+
+
+	
+
 	
 	
 

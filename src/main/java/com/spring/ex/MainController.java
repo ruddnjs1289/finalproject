@@ -5,22 +5,29 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.management.RuntimeErrorException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.javassist.compiler.ast.Keyword;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.ex.Service.CarmineService;
+import com.spring.ex.Service.CreplyService;
 import com.spring.ex.Service.MemberService;
 import com.spring.ex.dto.Carmine;
+import com.spring.ex.dto.Creply;
 import com.spring.ex.dto.Member;
+import com.spring.ex.dto.Page;
 
 /*메시지 Request processing failed; nested exception is org.mybatis.spring.MyBatisSystemException: 
 	nested exception is org.apache.ibatis.exceptions.PersistenceException:
@@ -40,15 +47,19 @@ public class MainController {
 	MemberService service;
 	@Inject
 	CarmineService Cservice; // 카마인 서비스
+	@Inject
+	CreplyService Creplyservice; //댓글
 
-	@RequestMapping("/Main")
-	public String Main() {
+	
+	
+	@RequestMapping(value="/main",method=RequestMethod.GET)
+	public String Main() throws Exception{
 		return "Main";
 	}
 
 	// 로그인
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String Login(Member vo, HttpServletRequest req) throws Exception {
+	public String Login(Member vo, HttpServletRequest req,RedirectAttributes rttr) throws Exception {
 		logger.info("post login");
 
 		HttpSession session = req.getSession();
@@ -57,11 +68,12 @@ public class MainController {
 
 		if (login == null) {
 			session.setAttribute("member", null);
+			rttr.addFlashAttribute("msg",false);
 		} else {
 			session.setAttribute("member", login);
 		}
 
-		return "Main";
+		return "redirect:/main";
 	}
 
 	// 로그아웃
@@ -72,6 +84,34 @@ public class MainController {
 		session.invalidate();
 
 		return "Main";
+	}
+	
+	//회원 탈퇴 get
+	@RequestMapping(value="/delete",method = RequestMethod.GET)
+	public void getdelete() throws Exception{
+		logger.info("delete");
+	}
+	
+	//회원 탈퇴 post
+	@RequestMapping(value = "/delete",method = RequestMethod.POST)
+	public String postdelete(HttpSession session, Member vo,RedirectAttributes rttr)throws Exception {
+		logger.info("탈퇴");
+		
+		Member member =(Member)session.getAttribute("member");
+		
+		String oldPass = member.getPw();
+		String newPass = vo.getPw();
+		
+		if(!(oldPass.equals(newPass))) {
+			rttr.addFlashAttribute("msg",false);
+			return "redirect:/delete";
+		}
+		
+			service.delete(vo);
+			
+			session.invalidate();
+		return "redirect:/main";
+		
 	}
 
 	// 회원가입 get
@@ -86,26 +126,29 @@ public class MainController {
 	public String getJoin(Member vo) throws Exception {
 		logger.info("post resister");
 
-		/*
-		 * int result=service.idCheck(vo);
-		 * 
-		 * try { if(result == 1) { return"Join"; }else if(result == 0){
-		 * service.register(vo); } } catch (Exception e) { // TODO: handle exception
-		 * throw new RuntimeException(); }
-		 */
+		
 
 		service.register(vo);
-		return "Main";
+		
+		return "Join";
 	}
 
 	// 회원확인
 
-	@RequestMapping(value = "/idCheck", method = RequestMethod.POST)
 	@ResponseBody
-	public int postIdCheck(Member vo) throws Exception {
+	@RequestMapping(value = "/idCheck", method = RequestMethod.POST)
+	public int postIdCheck(HttpServletRequest req) throws Exception {
+		
 		logger.info("post idCheck");
+		String id= req.getParameter("id");
+		Member idCheck = service.idCheck(id);
+		
+		int result =0;
+		
+		if(idCheck != null) {
+			result = 1;
+		}
 
-		int result = service.idCheck(vo);
 		return result;
 	}
 
@@ -126,12 +169,17 @@ public class MainController {
 
 	// 게시물 조회
 	@RequestMapping(value = "/View", method = RequestMethod.GET)
-	public void getView(@RequestParam("bno") int bno, Model model) throws Exception {
+	public void getView(@RequestParam("bno") int bno, Model model,Carmine vo2 ) throws Exception {
 
 		Carmine vo = Cservice.view(bno);
-
+		Cservice.plusCnt(vo2.getBno());
+		
 		model.addAttribute("view", vo);
-
+		
+		
+		List<Creply> Creply=null;
+		Creply=Creplyservice.list(bno);
+		model.addAttribute("Creply",Creply);
 	}
 
 	// 게시물 수정
@@ -238,97 +286,32 @@ public class MainController {
 
 	// 카마인 서버게시판으로
 	@RequestMapping(value = "/Carmine", method = RequestMethod.GET)
-	public /*String*/void Carmine(Model model,@RequestParam("num") int num) throws Exception {
-		
-		/*
-		 * List<Carmine> list = null; list = Cservice.list(); model.addAttribute("list",
-		 * list);
-		 */
-		
-		/* return "Carmine"; */
-	//게시물의 총 개수 구함->한 페이지당 출력할 게시물 개수 정함 ->하단에 표시알 페이징 게시물 갯수 구함 ->현재 페이지를 기준 10개 데이터 출력
+	public /*String*/void Carmine(Model model,@RequestParam("num") int num,
+			@RequestParam(value="searchType",required = false,defaultValue ="title" )String searchType,
+			@RequestParam(value="keyword",required = false,defaultValue = "") String keyowrd) throws Exception {
 		
 		
-		//게시물 총 갯수 구하기 
-		int count= Cservice.Count();
 		
-		//한 페이지에 출력할 게시물 갯수
-		int postNum = 10;
+		Page page =new Page();
 		
-		//하단 페이징 번호([게시물 총 개수/한페이지에 출력할 갯수]의 올림)
-		int pageNum =(int)Math.ceil((double)count/postNum);
+		page.setNum(num);
+		page.setCount(Cservice.searchCount(searchType,keyowrd));
 		
-		//출력할 게시물 
-		int displayPost =(num-1)*postNum;
+		List<Carmine> list =null;
+		list =Cservice.listPage(page.getDisplayPost(), page.getPostNum(), searchType, keyowrd);
 		
-		//한번에 표시할 페이징 번호의 갯수
-		int pageNum_cnt=10;
-		
-		//표시되는 페이지 번호 중 마지막 번호
-		int endPageNum =(int)(Math.ceil((double)num/(double)pageNum_cnt)*pageNum_cnt);
-		
-		//표시 되는 페이지 번호 중 첫번째 번호
-		int startPageNum = endPageNum-(pageNum_cnt-1);
-		
-		// 마지막 번호 재계산
-		int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-		 
-		if(endPageNum > endPageNum_tmp) {
-		 endPageNum = endPageNum_tmp;
-		}
-		
-		boolean prev = startPageNum == 1 ? false : true;
-		boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-		
-		List<Carmine> list=null;
-		list = Cservice.listPage(displayPost, postNum);
 		model.addAttribute("list",list);
-		model.addAttribute("pageNum",pageNum);
-		
-		// 시작 및 끝 번호
-		model.addAttribute("startPageNum", startPageNum);
-		model.addAttribute("endPageNum", endPageNum);
-
-		// 이전 및 다음 
-		model.addAttribute("prev", prev);
-		model.addAttribute("next", next);
-		
-		//현재 페이지
+	
+		model.addAttribute("page",page);
 		model.addAttribute("select",num);
 		
-		
 	
+		
+		page.setSearchType(searchType);
+		page.setKeyword(keyowrd);
 	
 	}
 	
-	// 카마인 서버게시판으로 +페이징 추가
-	@RequestMapping(value = "/CarminePage", method = RequestMethod.GET)
-	public void getCarminepage(Model model, @RequestParam("num") int num ) throws Exception {
-		//게시물의 총 개수 구함->한 페이지당 출력할 게시물 개수 정함 ->하단에 표시알 페이징 게시물 갯수 구함 ->현재 페이지를 기준 10개 데이터 출력
-		
-		
-		//게시물 총 갯수 구하기 
-		int count= Cservice.Count();
-		
-		//한 페이지에 출력할 게시물 갯수
-		int postNum = 10;
-		
-		//하단 페이징 번호([게시물 총 개수/한페이지에 출력할 갯수]의 올림)
-		int pageNum =(int)Math.ceil((double)count/postNum);
-		
-		//출력할 게시물 
-		int displayPost =(num-1)*postNum;
-		
-		List<Carmine> list=null;
-		list = Cservice.listPage(displayPost, postNum);
-		model.addAttribute("list",list);
-		model.addAttribute("pageNum",pageNum);
 	
-		
-		
-		
-		
-		
-	}
 
 }
